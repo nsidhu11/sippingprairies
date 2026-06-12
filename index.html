@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>Sipping Prairies — Liquor Store · Now Open in Edmonton, AB</title>
+  <meta name="description" content="A western-rooted liquor house now open at 12251 Fort Rd NW, Edmonton. Whisky, wine & fine spirits — discover a flavour, mark a moment, and let the evening run a little longer." />
+  <meta name="theme-color" content="#570000" />
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- Progressive enhancement flag (set before CSS so first paint can pre-hide animatable bits) -->
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js','js');
+    // Returning within this tab session? Skip the loader before first paint.
+    try { if (sessionStorage.getItem('sp-age') === 'ok' && sessionStorage.getItem('sp-booted') === '1') document.documentElement.classList.add('is-returning'); } catch (e) {}
+  </script>
+
+  <!-- Favicons -->
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/mascot-mark-dark.svg" />
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
+
+  <!-- Social / Open Graph -->
+  <meta property="og:type" content="business.business" />
+  <meta property="og:site_name" content="Sipping Prairies" />
+  <meta property="og:title" content="Sipping Prairies — Now Open in Edmonton" />
+  <meta property="og:description" content="The long light on the prairie. A western-rooted liquor house now open at 12251 Fort Rd NW, Edmonton." />
+  <meta property="og:image" content="assets/img/logo-vertical-dark.svg" />
+  <meta property="og:url" content="https://www.sippingprairies.ca" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts: Source Serif 4 (display), Plus Jakarta Sans (body/UI), Fraunces (expressive accent) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/main.css" />
+
+  <!-- Structured data: local liquor store -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LiquorStore",
+    "name": "Sipping Prairies",
+    "description": "Western-rooted liquor house in Edmonton — whisky, wine and fine spirits.",
+    "url": "https://www.sippingprairies.ca",
+    "email": "sippingprairies@gmail.com",
+    "image": "https://www.sippingprairies.ca/assets/img/logo-vertical-dark.svg",
+    "logo": "https://www.sippingprairies.ca/assets/img/mascot-mark-dark.svg",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "12251 Fort Rd NW",
+      "addressLocality": "Edmonton",
+      "addressRegion": "AB",
+      "addressCountry": "CA"
+    },
+    "areaServed": "Edmonton, Alberta",
+    "slogan": "Find Your Perfect Pour"
+  }
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#hero">Skip to content</a>
+
+  <!-- ============================================================= -->
+  <!-- MASTER LIGHT — the fixed sky whose colour drifts as you scroll -->
+  <!-- ============================================================= -->
+  <div class="sky" aria-hidden="true">
+    <div class="sky__layer sky__layer--bluehour"></div>
+    <div class="sky__layer sky__layer--golden"></div>
+    <div class="sky__layer sky__layer--dusk"></div>
+    <div class="sky__layer sky__layer--night"></div>
+    <div class="sky__sun"></div>
+    <div class="sky__stars"></div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ============================================================= -->
+  <!-- AGE GATE -->
+  <!-- ============================================================= -->
+  <div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="agegate-title">
+    <div class="agegate__card">
+      <img class="agegate__crest" src="assets/img/mascot-mark-dark.svg" alt="" width="96" height="96" />
+      <p class="eyebrow">Est. Edmonton · Alberta</p>
+      <h1 class="agegate__title" id="agegate-title">Before the light<br />gets good&hellip;</h1>
+      <p class="agegate__body">You must be of legal drinking age in Alberta (18+) to step inside.</p>
+      <div class="agegate__actions">
+        <button class="btn btn--seal" type="button" data-age="ok" data-cursor="enter">I am 18 or older</button>
+        <button class="btn btn--ghost" type="button" data-age="no">I am under 18</button>
+      </div>
+      <p class="agegate__foot">Please enjoy responsibly.</p>
+    </div>
+  </div>
+
+  <!-- Respectful holding screen for under-18 -->
+  <div class="under18" id="under18" hidden>
+    <div class="under18__inner">
+      <img src="assets/img/wordmark-light.svg" alt="Sipping Prairies" width="260" class="under18__mark" />
+      <h2>Come back when the light's right.</h2>
+      <p>You must be of legal drinking age in Alberta to view this site. For information about alcohol in Alberta, visit
+        <a href="https://aglc.ca" target="_blank" rel="noopener">AGLC</a>.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- PRELOADER -->
+  <!-- ============================================================= -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <img class="preloader__wordmark" src="assets/img/wordmark-dark.svg" alt="" width="420" />
+      <div class="preloader__rule"><span class="preloader__fill"></span></div>
+      <p class="preloader__line">The long light is coming in.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- NAV -->
+  <!-- ============================================================= -->
+  <header class="nav" id="nav">
+    <a class="nav__brand" href="#hero" aria-label="Sipping Prairies — home" data-cursor="home">
+      <img src="assets/img/logo-horizontal-light-tight.svg" alt="Sipping Prairies" class="nav__logo" />
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#hero" class="is-current">Home</a>
+      <a href="about.html">About</a>
+      <a href="shop.html">Shop</a>
+      <a href="offers.html">Offers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav__right">
+      <a class="btn btn--seal btn--sm" href="#contact" data-cursor="enter">Visit Us</a>
+      <span class="nav__seal" aria-hidden="true" title="Scroll progress">
+        <img src="assets/img/mascot-mark-light.svg" alt="" />
+        <span class="nav__seal-fill"></span>
+      </span>
+    </div>
+    <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <!-- ============================================================= -->
+    <!-- HERO — Blue hour -->
+    <!-- ============================================================= -->
+    <section class="hero chapter" id="hero" aria-labelledby="hero-title">
+      <div class="hero__bg" aria-hidden="true"></div>
+
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <p class="eyebrow hero__eyebrow">Est. Edmonton · Now Open</p>
+          <h1 class="hero__title display" id="hero-title">
+            <span class="line"><span class="line__in">The long light</span></span>
+            <span class="line"><span class="line__in">on the <em class="glow-word">prairie.</em></span></span>
+          </h1>
+          <p class="hero__sub">A western-rooted liquor house in Edmonton — come discover a flavour, mark a moment, and let the evening run a little longer.</p>
+          <div class="hero__cta">
+            <a class="btn btn--hero" href="shop.html" data-cursor="pour">View Collection</a>
+          </div>
+        </div>
+      </div>
+
+      <a class="hero__scroll" href="#deals" data-cursor="pour">
+        <span class="hero__scroll-line"></span>
+        scroll
+      </a>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- DEAL OF THE WEEK + SHOP BY CATEGORY -->
+    <!-- ============================================================= -->
+    <section class="deals" id="deals" aria-labelledby="deal-title">
+      <div class="deal__bar">
+        <div class="deal__bar-inner">
+          <div class="deal__copy">
+            <p class="eyebrow eyebrow--light">Limited-Time Offer</p>
+            <h2 class="deal__title" id="deal-title"><strong>8% off</strong> all premium whisky</h2>
+            <p class="deal__terms">Until June 30, 2026 · spirits &amp; liquor only.</p>
+          </div>
+
+          <div class="deal__timer" role="timer" aria-label="Time remaining until the offer ends" data-deadline="2026-06-30T23:59:59">
+            <div class="deal__unit"><span class="deal__num" data-cd="days">00</span><span class="deal__label">Days</span></div>
+            <span class="deal__sep" aria-hidden="true">:</span>
+            <div class="deal__unit"><span class="deal__num" data-cd="hours">00</span><span class="deal__label">Hours</span></div>
+            <span class="deal__sep" aria-hidden="true">:</span>
+            <div class="deal__unit"><span class="deal__num" data-cd="mins">00</span><span class="deal__label">Minutes</span></div>
+            <span class="deal__sep" aria-hidden="true">:</span>
+            <div class="deal__unit"><span class="deal__num" data-cd="secs">00</span><span class="deal__label">Seconds</span></div>
+          </div>
+
+          <a class="btn btn--outline" href="shop.html" data-cursor="pour">Explore Products</a>
+        </div>
+      </div>
+
+      <div class="cats-wrap">
+        <ul class="cats" role="list">
+          <li class="cat" data-reveal><a class="cat__link" href="shop.html" data-cursor="pour">
+            <span class="cat__circle"><img src="assets/img/cat-beer.webp" alt="Beer" width="620" height="620" loading="lazy" /></span>
+            <span class="cat__name">Beer</span>
+          </a></li>
+          <li class="cat" data-reveal><a class="cat__link" href="shop.html" data-cursor="pour">
+            <span class="cat__circle"><img src="assets/img/cat-rum.webp" alt="Rum" width="620" height="620" loading="lazy" /></span>
+            <span class="cat__name">Rum</span>
+          </a></li>
+          <li class="cat" data-reveal><a class="cat__link" href="shop.html" data-cursor="pour">
+            <span class="cat__circle"><img src="assets/img/cat-whisky.webp" alt="Whisky" width="620" height="620" loading="lazy" /></span>
+            <span class="cat__name">Whisky</span>
+          </a></li>
+          <li class="cat" data-reveal><a class="cat__link" href="shop.html" data-cursor="pour">
+            <span class="cat__circle"><img src="assets/img/cat-vodka.webp" alt="Vodka" width="620" height="620" loading="lazy" /></span>
+            <span class="cat__name">Vodka</span>
+          </a></li>
+          <li class="cat" data-reveal><a class="cat__link" href="shop.html" data-cursor="pour">
+            <span class="cat__circle"><img src="assets/img/cat-tequila.webp" alt="Tequila" width="620" height="620" loading="lazy" /></span>
+            <span class="cat__name">Tequila</span>
+          </a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- NEW ARRIVALS (tabbed featured products) -->
+    <!-- ============================================================= -->
+    <section class="arrivals" id="arrivals" aria-labelledby="arrivals-title">
+      <div class="arrivals__inner">
+        <header class="arrivals__head">
+          <div data-reveal>
+            <p class="eyebrow">Handpicked For You</p>
+            <h2 class="arrivals__title" id="arrivals-title">Featured <strong>Items</strong></h2>
+          </div>
+          <div class="arrivals__tabs" role="tablist" aria-label="Product categories">
+            <button class="tab" role="tab" type="button" data-cat="wine" aria-selected="false">Wine</button>
+            <button class="tab" role="tab" type="button" data-cat="vodka" aria-selected="false">Vodka</button>
+            <button class="tab is-active" role="tab" type="button" data-cat="whisky" aria-selected="true">Whisky</button>
+            <button class="tab" role="tab" type="button" data-cat="beer" aria-selected="false">Beer</button>
+          </div>
+        </header>
+        <div class="arrivals__grid" id="arrivalsGrid" aria-live="polite">
+          <article class="pcard pcard--promo" id="promoCard">
+            <div class="promo-media">
+              <video class="promo-media__video" muted playsinline preload="none" poster="assets/img/promo.webp">
+                <source src="assets/media/feature_promotion.mp4" type="video/mp4" />
+              </video>
+              <img class="promo-media__img" src="assets/img/promo.webp" alt="Featured bottles available in store" />
+            </div>
+            <div class="promo__overlay">
+              <span class="promo__badge">Special Offer</span>
+              <div class="promo__foot">
+                <h3 class="promo__title">Make it a round</h3>
+                <a class="promo__btn" href="#contact" data-cursor="pour">Shop Now</a>
+              </div>
+            </div>
+          </article>
+        </div>
+        <p class="arrivals__note">Online ordering coming soon — full range available in store.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- WHY SHOP (benefits) -->
+    <!-- ============================================================= -->
+    <section class="benefits" id="benefits" aria-labelledby="benefits-title">
+      <div class="benefits__inner">
+        <header class="benefits__head" data-reveal>
+          <p class="eyebrow">Our Benefits</p>
+          <h2 class="benefits__title" id="benefits-title">Why Shop <strong>With Us</strong></h2>
+        </header>
+        <ul class="benefits__grid" role="list">
+          <li class="benefit" data-reveal>
+            <span class="benefit__icon">
+              <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M27 6h10v6.6l3.4 5.8A12 12 0 0 1 42 24.4V54a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4V24.4c0-2.1.56-4.17 1.6-6L27 12.6V6Z"/><rect x="24.5" y="34" width="15" height="13" rx="1.4" fill="#fbf4da" opacity=".9"/></svg>
+            </span>
+            <h3 class="benefit__title">Curated Range</h3>
+            <p class="benefit__desc">A hand-picked shelf of whisky, wine, and fine spirits — a bottle for every taste.</p>
+          </li>
+          <li class="benefit" data-reveal>
+            <span class="benefit__icon">
+              <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M31 7H13a6 6 0 0 0-6 6v18a4 4 0 0 0 1.17 2.83l23 23a4 4 0 0 0 5.66 0L57 39.66a4 4 0 0 0 0-5.66l-23-23A4 4 0 0 0 31 7ZM19 16a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+            </span>
+            <h3 class="benefit__title">Honest Prices</h3>
+            <p class="benefit__desc">Fair pricing on the brands you love, with member savings all year round.</p>
+          </li>
+          <li class="benefit" data-reveal>
+            <span class="benefit__icon">
+              <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M12 10h40a5 5 0 0 1 5 5v22a5 5 0 0 1-5 5H30L17 54.5V42h-5a5 5 0 0 1-5-5V15a5 5 0 0 1 5-5Z"/><circle cx="24" cy="26" r="3.2" fill="#fbf4da"/><circle cx="34" cy="26" r="3.2" fill="#fbf4da"/><circle cx="44" cy="26" r="3.2" fill="#fbf4da"/></svg>
+            </span>
+            <h3 class="benefit__title">Friendly Guidance</h3>
+            <p class="benefit__desc">Not sure what to pour? Our crew — and Mr. Sippy — will point you right.</p>
+          </li>
+          <li class="benefit" data-reveal>
+            <span class="benefit__icon">
+              <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><path d="M25 40 18 60l8.5-4.3L32 62l5.5-6.3L46 60l-7-20z"/><circle cx="32" cy="24" r="18"/><path d="M32 13.5l2.7 5.7 6.3.9-4.6 4.3 1.1 6.2L32 27.7l-5.5 2.9 1.1-6.2-4.6-4.3 6.3-.9z" fill="#fbf4da"/></svg>
+            </span>
+            <h3 class="benefit__title">Warm Welcome</h3>
+            <p class="benefit__desc">A relaxed, prairie-style welcome from the moment you walk through the doors.</p>
+          </li>
+        </ul>
+        <p class="benefits__stat" data-reveal>Fresh stock lands on the shelf <strong>every week</strong> — come find your next favourite. <a href="shop.html" data-cursor="pour">Browse the range</a></p>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- CONTACT · VISIT -->
+    <!-- ============================================================= -->
+    <section class="chapter visit" id="contact" aria-labelledby="visit-title">
+      <div class="visit__inner">
+        <div class="visit__ledger panel panel--leather">
+          <p class="eyebrow eyebrow--light" data-reveal>Visit Us</p>
+          <h2 class="display visit__title" id="visit-title" data-split>The doors<br />are open.</h2>
+          <dl class="visit__details">
+            <div><dt>Address</dt><dd>12251 Fort Rd NW<br />Edmonton, Alberta</dd></div>
+            <div><dt>Hours</dt><dd>Open now — call for today&rsquo;s hours</dd></div>
+            <div><dt>Contact</dt><dd><a href="mailto:sippingprairies@gmail.com">sippingprairies@gmail.com</a></dd></div>
+          </dl>
+          <a class="btn btn--seal" href="https://www.google.com/maps/dir/?api=1&destination=12251+Fort+Rd+NW+Edmonton+Alberta" target="_blank" rel="noopener" data-cursor="enter">Get Directions</a>
+          <p class="visit__friendly accent">Knock and say Sippy sent you.</p>
+        </div>
+
+        <div class="visit__map">
+          <iframe class="visit__map-frame" title="Map showing Sipping Prairies at 12251 Fort Rd NW, Edmonton"
+            src="https://maps.google.com/maps?q=12251%20Fort%20Rd%20NW%2C%20Edmonton%2C%20AB&z=15&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <span class="visit__map-pin" aria-hidden="true">
+            <span class="visit__map-badge"><img src="assets/img/mascot-mark-light.svg" alt="" /></span>
+          </span>
+          <a class="visit__map-open" href="https://www.google.com/maps/search/?api=1&query=12251+Fort+Rd+NW+Edmonton+Alberta" target="_blank" rel="noopener" data-cursor="enter">Open in Google Maps ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- 07 · NOTIFY -->
+    <!-- ============================================================= -->
+    <section class="chapter notify" id="notify" aria-labelledby="notify-title">
+      <div class="notify__inner">
+        <p class="eyebrow eyebrow--light" data-reveal>Stay in the loop</p>
+        <h2 class="display notify__title accent" id="notify-title" data-split>Never miss a pour.</h2>
+        <p class="notify__sub body" data-reveal>First word on new arrivals, tastings, and member-only offers — nothing else.</p>
+
+        <form class="notify__form" id="notifyForm" novalidate data-reveal>
+          <div class="field">
+            <label class="visually-hidden" for="email">Email address</label>
+            <input class="field__input" id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" required aria-describedby="notify-msg" />
+            <button class="btn btn--seal field__btn" type="submit" data-cursor="enter">Join the List</button>
+          </div>
+          <!-- honeypot -->
+          <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <p class="notify__msg" id="notify-msg" role="status" aria-live="polite"></p>
+          <p class="notify__note">No spam. Unsubscribe anytime.</p>
+        </form>
+
+        <img class="notify__celebrate" src="assets/img/pose-saloon-dance.webp" alt="" width="600" height="900" aria-hidden="true" />
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================= -->
+  <!-- FOOTER — Last light -->
+  <!-- ============================================================= -->
+  <footer class="footer" id="footer">
+    <div class="footer__inner">
+      <a class="footer__brand" href="index.html" aria-label="Sipping Prairies — home" data-cursor="home">
+        <img class="footer__sticker" src="assets/img/sticker.png" alt="Sipping Prairies" width="116" height="116" />
+      </a>
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="about.html">About</a>
+        <a href="shop.html">Shop</a>
+        <a href="offers.html">Offers</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="footer__info">
+        <address class="footer__addr">12251 Fort Rd NW, Edmonton, AB</address>
+        <a href="mailto:sippingprairies@gmail.com">sippingprairies@gmail.com</a>
+        <a href="tel:+15875551234">(587) 555-1234</a>
+        <a class="footer__ig" href="https://instagram.com/sippingprairies" target="_blank" rel="noopener" aria-label="Sipping Prairies on Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+          @sippingprairies
+        </a>
+      </div>
+    </div>
+
+    <div class="footer__base">
+      <p class="footer__legal">© 2026 Sipping Prairies · Edmonton, AB · 18+ · Please enjoy responsibly.</p>
+      <button class="footer__motion" id="motionToggle" type="button" aria-pressed="false">
+        <span class="footer__motion-dot" aria-hidden="true"></span>
+        Reduce motion
+      </button>
+    </div>
+  </footer>
+
+  <!-- Vendored libraries (work offline, no CDN) -->
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/vendor/SplitText.min.js"></script>
+  <script src="js/vendor/CustomEase.min.js"></script>
+  <script src="js/vendor/lenis.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

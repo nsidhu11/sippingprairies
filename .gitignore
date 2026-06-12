@@ -1,0 +1,24 @@
+# Dependencies (dev only — not deployed)
+node_modules/
+
+# Dev tooling & scripts (not part of the site)
+tools/
+
+# Brand source files & design originals (kept locally, not on GitHub)
+sp/
+*.psd
+*.ai
+
+# Raw source images / video at project root (optimized copies live in assets/)
+/*.jpg
+/*.jpeg
+/*.png
+/*.mp4
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Claude Code workspace
+.claude/

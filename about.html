@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>About — Sipping Prairies · Edmonton, AB</title>
+  <meta name="description" content="About Sipping Prairies — a western-rooted liquor house on Fort Road in Edmonton. Our story, our mission and values, and a word from Mr. Sippy." />
+  <meta name="theme-color" content="#570000" />
+  <meta name="color-scheme" content="light dark" />
+
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js','js');
+    // Returning within this tab session? Skip the loader before first paint.
+    try { if (sessionStorage.getItem('sp-age') === 'ok' && sessionStorage.getItem('sp-booted') === '1') document.documentElement.classList.add('is-returning'); } catch (e) {}
+  </script>
+
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/mascot-mark-dark.svg" />
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#about">Skip to content</a>
+
+  <div class="sky" aria-hidden="true">
+    <div class="sky__layer sky__layer--bluehour"></div>
+    <div class="sky__layer sky__layer--golden"></div>
+    <div class="sky__layer sky__layer--dusk"></div>
+    <div class="sky__layer sky__layer--night"></div>
+    <div class="sky__sun"></div>
+    <div class="sky__stars"></div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- AGE GATE -->
+  <div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="agegate-title">
+    <div class="agegate__card">
+      <img class="agegate__crest" src="assets/img/mascot-mark-dark.svg" alt="" width="96" height="96" />
+      <p class="eyebrow">Est. Edmonton · Alberta</p>
+      <h1 class="agegate__title" id="agegate-title">Before the light<br />gets good&hellip;</h1>
+      <p class="agegate__body">You must be of legal drinking age in Alberta (18+) to step inside.</p>
+      <div class="agegate__actions">
+        <button class="btn btn--seal" type="button" data-age="ok" data-cursor="enter">I am 18 or older</button>
+        <button class="btn btn--ghost" type="button" data-age="no">I am under 18</button>
+      </div>
+      <p class="agegate__foot">Please enjoy responsibly.</p>
+    </div>
+  </div>
+
+  <div class="under18" id="under18" hidden>
+    <div class="under18__inner">
+      <img src="assets/img/wordmark-light.svg" alt="Sipping Prairies" width="260" class="under18__mark" />
+      <h2>Come back when the light's right.</h2>
+      <p>You must be of legal drinking age in Alberta to view this site. For information about alcohol in Alberta, visit
+        <a href="https://aglc.ca" target="_blank" rel="noopener">AGLC</a>.</p>
+    </div>
+  </div>
+
+  <!-- PRELOADER -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <img class="preloader__wordmark" src="assets/img/wordmark-dark.svg" alt="" width="420" />
+      <div class="preloader__rule"><span class="preloader__fill"></span></div>
+      <p class="preloader__line">Pull up a barrel.</p>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav nav--solid" id="nav">
+    <a class="nav__brand" href="index.html" aria-label="Sipping Prairies — home" data-cursor="home">
+      <img src="assets/img/logo-horizontal-light-tight.svg" alt="Sipping Prairies" class="nav__logo" />
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="#about" class="is-current">About</a>
+      <a href="shop.html">Shop</a>
+      <a href="offers.html">Offers</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav__right">
+      <a class="btn btn--seal btn--sm" href="index.html#contact" data-cursor="enter">Visit Us</a>
+      <span class="nav__seal" aria-hidden="true" title="Scroll progress">
+        <img src="assets/img/mascot-mark-light.svg" alt="" />
+        <span class="nav__seal-fill"></span>
+      </span>
+    </div>
+    <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <!-- ============================================================= -->
+    <!-- MEET MR. SIPPY -->
+    <!-- ============================================================= -->
+    <section class="chapter meet abt-lead" id="meet" aria-labelledby="meet-title">
+      <div class="meet__inner">
+        <div class="meet__figure" data-magnetic>
+          <span class="meet__glow" aria-hidden="true"></span>
+          <img class="meet__host" src="assets/img/pose-hero.webp" alt="Mr. Sippy, the cowboy host, raising a glass in welcome" width="853" height="1280" loading="lazy" />
+        </div>
+        <div class="meet__copy">
+          <p class="eyebrow">Meet Mr. Sippy</p>
+          <blockquote class="meet__quote accent">Pull up a barrel.<br />I&rsquo;ve saved you a seat.</blockquote>
+          <p class="body">Mr.&nbsp;Sippy keeps the cellar and the welcome warm. He&rsquo;s tasted every bottle on the shelf, knows which pour fits the night, and never met a sunset he didn&rsquo;t toast. Ask him anything — he&rsquo;s got a story and a recommendation for both.</p>
+          <img class="meet__badge" src="assets/img/mascot-mark-dark.svg" alt="" width="64" height="64" aria-hidden="true" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- INTRO SPLIT -->
+    <!-- ============================================================= -->
+    <section class="abt-intro" id="about">
+      <div class="abt-intro__media" role="img" aria-label="A glass of whisky poured beside the bottle on a wooden bar"></div>
+      <div class="abt-intro__panel">
+        <p class="eyebrow">Who We Are</p>
+        <h1 class="abt-intro__title">A western liquor house in Edmonton</h1>
+        <p class="abt-intro__body">Sipping Prairies is a western-rooted bottle shop on Fort&nbsp;Road, bringing the easy spirit of the open prairie to Edmonton. From rare whisky to everyday favourites, our shelf is hand-picked and our door is always open with a warm welcome — and our man Mr.&nbsp;Sippy is never far from a good story or a better recommendation.</p>
+        <a class="btn btn--seal abt-intro__cta" href="index.html#contact" data-cursor="enter">Contact Us</a>
+        <ul class="abt-checklist">
+          <li>Hand-picked whisky, wine &amp; spirits</li>
+          <li>Earn member savings all year</li>
+          <li>Top global brands &amp; local finds</li>
+          <li>8% off premium whisky to June&nbsp;30</li>
+          <li>Friendly, knowledgeable crew</li>
+          <li>6% off all year for Canada&rsquo;s heroes</li>
+          <li>Honest, everyday pricing</li>
+          <li>A warm, prairie-style welcome</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- STATS -->
+    <!-- ============================================================= -->
+    <section class="abt-stats" aria-label="At a glance">
+      <div class="abt-stats__grid">
+        <div class="abt-stat" data-reveal><span class="abt-stat__num">2026</span><span class="abt-stat__label">Opened in Edmonton</span></div>
+        <div class="abt-stat" data-reveal><span class="abt-stat__num">500<span>+</span></span><span class="abt-stat__label">Labels on the shelf</span></div>
+        <div class="abt-stat" data-reveal><span class="abt-stat__num">8<span>%</span></span><span class="abt-stat__label">Off premium whisky</span></div>
+        <div class="abt-stat" data-reveal><span class="abt-stat__num">100<span>%</span></span><span class="abt-stat__label">Local &amp; independent</span></div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- MISSION & VALUES -->
+    <!-- ============================================================= -->
+    <section class="abt-mission" aria-labelledby="mission-title">
+      <div class="abt-mission__head" data-reveal>
+        <p class="eyebrow">Mission &amp; Values</p>
+        <h2 class="abt-mission__title" id="mission-title">Good company,<br />and a better bottle.</h2>
+      </div>
+      <div class="abt-mission__cols">
+        <div data-reveal>
+          <h3>Our Mission</h3>
+          <p>Sipping Prairies exists to make buying a bottle feel like a visit, not a transaction. We curate a shelf of whisky, wine, and fine spirits worth getting excited about, and pair it with the kind of welcome the prairies are known for.</p>
+          <p>Whether you&rsquo;re marking a moment or winding down the evening, we want you to leave with something you&rsquo;ll love — and a reason to come back.</p>
+        </div>
+        <div data-reveal>
+          <h3>Core Values</h3>
+          <p>We&rsquo;re western at heart: warm, honest, and a little playful. We believe in quality over hype, in knowing our shelf and our neighbours by name, and in treating every customer — and every bottle — with care.</p>
+          <p>We back the people who back our community, and we pour every welcome like we mean it.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="footer">
+    <div class="footer__inner">
+      <a class="footer__brand" href="index.html" aria-label="Sipping Prairies — home" data-cursor="home">
+        <img class="footer__sticker" src="assets/img/sticker.png" alt="Sipping Prairies" width="116" height="116" />
+      </a>
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="#about">About</a>
+        <a href="shop.html">Shop</a>
+        <a href="offers.html">Offers</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="footer__info">
+        <address class="footer__addr">12251 Fort Rd NW, Edmonton, AB</address>
+        <a href="mailto:sippingprairies@gmail.com">sippingprairies@gmail.com</a>
+        <a href="tel:+15875551234">(587) 555-1234</a>
+        <a class="footer__ig" href="https://instagram.com/sippingprairies" target="_blank" rel="noopener" aria-label="Sipping Prairies on Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+          @sippingprairies
+        </a>
+      </div>
+    </div>
+
+    <div class="footer__base">
+      <p class="footer__legal">© 2026 Sipping Prairies · Edmonton, AB · 18+ · Please enjoy responsibly.</p>
+      <button class="footer__motion" id="motionToggle" type="button" aria-pressed="false">
+        <span class="footer__motion-dot" aria-hidden="true"></span>
+        Reduce motion
+      </button>
+    </div>
+  </footer>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/vendor/SplitText.min.js"></script>
+  <script src="js/vendor/CustomEase.min.js"></script>
+  <script src="js/vendor/lenis.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
