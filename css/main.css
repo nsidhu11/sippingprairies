@@ -950,8 +950,8 @@ html.anim [data-card] { opacity: 0; }
   .place__visual { max-width: 460px; margin: 0 auto; }
 }
 
-@media (max-width: 680px) {
-  :root { --space-3xl: clamp(72px, 12vh, 120px); }
+@media (max-width: 900px) {
+  /* Collapse the nav to a burger on tablets — 5 links + button + seal crowd the bar */
   .nav__links, .nav__right .btn, .nav__seal { display: none; }
   .nav__burger { display: flex; }
   .nav.is-open .nav__links {
@@ -961,6 +961,13 @@ html.anim [data-card] { opacity: 0; }
     -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   .nav.is-open .nav__links a { padding: 1rem 0; border-bottom: 1px solid rgba(255,254,200,.12); font-size: 1rem; }
+  /* Give tablet layouts room: full-width offer cards, 2-up stats */
+  .offer-cards { grid-template-columns: 1fr; }
+  .abt-stats__grid { grid-template-columns: repeat(2, 1fr); gap: 1.8rem 1.2rem; }
+}
+
+@media (max-width: 680px) {
+  :root { --space-3xl: clamp(72px, 12vh, 120px); }
   .shelf__grid { grid-template-columns: 1fr; }
   .card--pick { grid-column: auto; }
   .field { flex-direction: column; padding: .8rem; border-radius: var(--radius-lg); }
