@@ -667,7 +667,7 @@
            between /d/ and /edit).
        Leave it as '' to read the local inventory.xlsx file instead.
        ================================================================ */
-    const SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT94fRkE5iuw6s0MSKJS2idSk9WcaqncaYR_AjLucUm1R37WjIcnnw12auExzgygzqrCbUsJyJCgsqU/pub?gid=1946577799&single=true&output=csv';
+    const SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQI9F_tXl1_8Kq2YHYMtwV3qxw6AvUUQZjfAn9xci-WZFXn4LCSCiW6NwFKKcz6aLPDNu8F8AnS-Eyy/pub?gid=396585442&single=true&output=csv';
     const INVENTORY_URL = 'inventory.xlsx';
 
     /* Fallback catalogue — only shown if inventory.xlsx can't be loaded/parsed. */
