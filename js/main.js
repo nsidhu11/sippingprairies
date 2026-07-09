@@ -643,11 +643,15 @@
     io.observe(card);
   }
 
-  /* ---------- Shop page: filterable catalogue ---------- */
+  /* ---------- Shop page: live catalogue from inventory.xlsx ----------
+     The shelf is driven by inventory.xlsx at the site root. On every visit the
+     browser fetches and parses the latest file (via SheetJS), so when the owner
+     replaces inventory.xlsx on the host, the shop updates with no code changes.
+     If the file can't be loaded, we fall back to a small placeholder catalogue
+     so the page never looks broken. */
   function setupShop() {
     const grid = $('#shopGrid');
     if (!grid) return;
-    const groupsEl = $('#shopFilterGroups');
     const filtersEl = $('#shopFilters');
     const countEl = $('#shopCount');
     const emptyEl = $('#shopEmpty');
@@ -655,162 +659,309 @@
     const overlay = $('#shopOverlay');
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-    /* Placeholder catalogue — swap for real inventory later.
-       { n: name, c: category, b: brand, p: price, s: size, y: age, badge } */
-    const CATALOG = [
-      { n: 'Prairie Reserve Single Malt', c: 'Whisky', b: 'Prairie Reserve', p: 72, s: '750ml', y: '12 Year', badge: 'best' },
-      { n: 'Cattle Trail Bourbon', c: 'Whisky', b: 'Cattle Trail', p: 63, s: '750ml', y: '10 Year', badge: '' },
-      { n: 'Old Fort Rye', c: 'Whisky', b: 'Old Fort', p: 46, s: '1L', y: 'No Age', badge: '' },
-      { n: 'High Plains 12 Year', c: 'Whisky', b: 'High Plains', p: 110, s: '750ml', y: '12 Year', badge: 'best' },
-      { n: 'High Plains 18 Year', c: 'Whisky', b: 'High Plains', p: 165, s: '750ml', y: '18 Year', badge: 'limited' },
-      { n: 'Homestead Blend', c: 'Whisky', b: 'Homestead', p: 39, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Cattle Trail 15 Year Reserve', c: 'Whisky', b: 'Cattle Trail', p: 92, s: '700ml', y: '15 Year', badge: '' },
-      { n: 'Golden Hour Chardonnay', c: 'Wine', b: 'Golden Hour', p: 24, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Sundown Rosé', c: 'Wine', b: 'Sundown', p: 22, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Prairie Vineyards Cabernet', c: 'Wine', b: 'Prairie Reserve', p: 28, s: '750ml', y: 'No Age', badge: 'best' },
-      { n: 'Golden Hour Merlot', c: 'Wine', b: 'Golden Hour', p: 34, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Sundown Pinot Noir', c: 'Wine', b: 'Sundown', p: 41, s: '750ml', y: 'No Age', badge: 'limited' },
-      { n: 'Clear Creek Vodka', c: 'Vodka', b: 'Clear Creek', p: 26, s: '750ml', y: 'No Age', badge: 'best' },
-      { n: 'Silver Spur Vodka', c: 'Vodka', b: 'Silver Spur', p: 45, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Clear Creek Reserve Vodka', c: 'Vodka', b: 'Clear Creek', p: 31, s: '1L', y: 'No Age', badge: '' },
-      { n: 'Frost Line Vodka', c: 'Vodka', b: 'Silver Spur', p: 29, s: '1.75L', y: 'No Age', badge: '' },
-      { n: 'Old Fort Spiced Rum', c: 'Rum', b: 'Old Fort', p: 34, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Cattle Trail Dark Rum', c: 'Rum', b: 'Cattle Trail', p: 38, s: '750ml', y: '8 Year', badge: '' },
-      { n: 'High Plains Aged Rum', c: 'Rum', b: 'High Plains', p: 52, s: '750ml', y: '10 Year', badge: 'best' },
-      { n: 'Silver Spur Blanco', c: 'Tequila', b: 'Silver Spur', p: 44, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Sundown Reposado', c: 'Tequila', b: 'Sundown', p: 58, s: '750ml', y: 'No Age', badge: 'limited' },
-      { n: 'Golden Hour Añejo', c: 'Tequila', b: 'Golden Hour', p: 72, s: '750ml', y: 'No Age', badge: 'best' },
-      { n: 'Clear Creek Dry Gin', c: 'Gin', b: 'Clear Creek', p: 33, s: '750ml', y: 'No Age', badge: '' },
-      { n: 'Prairie Reserve Gin', c: 'Gin', b: 'Prairie Reserve', p: 39, s: '375ml', y: 'No Age', badge: '' },
-      { n: 'Prairie Lager · 6 pack', c: 'Beer', b: 'Prairie Reserve', p: 15, s: '6-pack', y: 'No Age', badge: '' },
-      { n: 'High Plains IPA · 6 pack', c: 'Beer', b: 'High Plains', p: 18, s: '6-pack', y: 'No Age', badge: 'best' },
+    /* ================================================================
+       LIVE INVENTORY SOURCE — paste your Google Sheet below.
+       Use EITHER:
+         • the full "File ▸ Share ▸ Publish to web ▸ CSV" link, or
+         • just the Sheet ID (the long code in the sheet's web address,
+           between /d/ and /edit).
+       Leave it as '' to read the local inventory.xlsx file instead.
+       ================================================================ */
+    const SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT94fRkE5iuw6s0MSKJS2idSk9WcaqncaYR_AjLucUm1R37WjIcnnw12auExzgygzqrCbUsJyJCgsqU/pub?gid=1946577799&single=true&output=csv';
+    const INVENTORY_URL = 'inventory.xlsx';
+
+    /* Fallback catalogue — only shown if inventory.xlsx can't be loaded/parsed. */
+    const FALLBACK = [
+      { n: 'Prairie Reserve Single Malt', c: 'Whisky', t: 'Whisky', p: 72, s: '750ML' },
+      { n: 'Golden Hour Chardonnay', c: 'Wine', t: 'White Wine', p: 24, s: '750ML' },
+      { n: 'Clear Creek Vodka', c: 'Vodka', t: 'Vodka', p: 26, s: '750ML' },
+      { n: 'Old Fort Spiced Rum', c: 'Rum', t: 'Rum', p: 34, s: '750ML' },
+      { n: 'Silver Spur Blanco', c: 'Tequila', t: 'Tequila', p: 44, s: '750ML' },
+      { n: 'Clear Creek Dry Gin', c: 'Gin', t: 'Gin', p: 33, s: '750ML' },
     ];
 
-    // assign an image per product (cycled within category)
-    const CAT_IMG = {
-      Whisky: ['prod-whisky', 'prod-1', 'prod-2'], Wine: ['prod-3', 'prod-2'], Vodka: ['prod-vodka'],
-      Rum: ['prod-rum'], Tequila: ['prod-tequila'], Gin: ['prod-4'], Beer: ['prod-1'],
+    /* POS "Category" (column K) -> [ shelf category, display type ].
+       Unknown values fall back to a best-effort mapping on the first word. */
+    const CAT_MAP = {
+      'WHISKY': ['Whisky', 'Whisky'], 'VODKA': ['Vodka', 'Vodka'], 'RUM': ['Rum', 'Rum'],
+      'GIN': ['Gin', 'Gin'], 'TEQUILA': ['Tequila', 'Tequila'], 'LIQUEUR': ['Liqueur', 'Liqueur'],
+      'BRANDY COGNAC': ['Brandy & Cognac', 'Brandy & Cognac'], 'SPIRITS OTHER': ['Spirits', 'Other Spirits'],
+      'WINE RED': ['Wine', 'Red Wine'], 'WINE WHITE': ['Wine', 'White Wine'], 'WINE ROSE': ['Wine', 'Rosé'],
+      'WINE SPARKLING': ['Wine', 'Sparkling'], 'WINE FORTIFIED': ['Wine', 'Fortified'],
+      'BEER DOMESTIC': ['Beer', 'Domestic Beer'], 'BEER IMPORT': ['Beer', 'Import Beer'], 'BEER CRAFT': ['Beer', 'Craft Beer'],
+      'RTD': ['Coolers & RTD', 'RTD'], 'COOLER': ['Coolers & RTD', 'Cooler'], 'CIDER': ['Coolers & RTD', 'Cider'],
+      'NON ALC NOT CONNECT': ['Non-Alcoholic', 'Non-Alcoholic'], 'NON ALCOHOLIC': ['Non-Alcoholic', 'Non-Alcoholic'],
     };
-    const catCounter = {};
-    CATALOG.forEach((p) => { const l = CAT_IMG[p.c] || ['prod-1']; const i = (catCounter[p.c] = (catCounter[p.c] || 0) + 1) - 1; p.img = l[i % l.length]; });
-
-    const order = (arr, ref) => ref.filter((v) => arr.includes(v)).concat(arr.filter((v) => !ref.includes(v)));
-    const uniq = (key) => [...new Set(CATALOG.map((p) => p[key]))];
-    const cats = uniq('c');
-    const brands = uniq('b').sort();
-    const sizes = order(uniq('s'), ['375ml', '750ml', '700ml', '1L', '1.75L', '6-pack']);
-    const years = order(uniq('y'), ['No Age', '8 Year', '10 Year', '12 Year', '15 Year', '18 Year']);
-    const maxP = Math.ceil(Math.max(...CATALOG.map((p) => p.p)) / 5) * 5;
-    const minP = Math.floor(Math.min(...CATALOG.map((p) => p.p)));
-
-    const drop = (title, name, values, isPrice) => {
-      const body = isPrice
-        ? `<input type="range" class="fprice" id="shopPrice" min="${minP}" max="${maxP}" value="${maxP}" aria-label="Maximum price"><p class="fprice__label">Up to <strong id="shopPriceVal">$${maxP}</strong></p>`
-        : values.map((v) => `<label class="fopt"><input type="checkbox" name="${name}" value="${esc(v)}"><span>${esc(v)}</span></label>`).join('');
-      return `<div class="fdrop" data-name="${name}">
-        <button class="fdrop__btn" type="button" aria-expanded="false">${title}<span class="fdrop__count" data-count="${name}"></span>
-          <svg class="fdrop__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
-        <div class="fdrop__panel" hidden>${body}</div>
-      </div>`;
+    // Shelf cards are image-free (typographic). Category -> slug drives the colour accent
+    // (.pcard--shelf-<slug>).
+    const CAT_SLUG = {
+      Whisky: 'whisky', Vodka: 'vodka', Rum: 'rum', Gin: 'gin', Tequila: 'tequila', Liqueur: 'liqueur',
+      'Brandy & Cognac': 'brandy', Spirits: 'spirits', Wine: 'wine', Beer: 'beer', 'Coolers & RTD': 'coolers', 'Non-Alcoholic': 'nonalc',
     };
-    filtersEl.innerHTML = drop('Category', 'category', cats) + drop('Price', 'price', [], true) +
-      drop('Brands', 'brand', brands) + drop('Size', 'size', sizes) + drop('Years', 'year', years);
+    const ACRONYMS = new Set(['IPA', 'DIPA', 'APA', 'IPL', 'XPA', 'XO', 'VSOP', 'VS', 'RTD', 'NV', 'VQA', 'BC', 'DOP', 'IGT', 'PET', 'GSM']);
+    // POS descriptions are ALL CAPS — soften to title case while keeping acronyms/units.
+    const titleCase = (s) => String(s).trim().split(/\s+/).map((w) => {
+      const bare = w.replace(/[^\w]/g, '').toUpperCase();
+      if (ACRONYMS.has(bare)) return w.toUpperCase();
+      if (/\d/.test(w)) return w.toUpperCase();                 // 355ML, 6PK, 12X355
+      if (w.length <= 2 && w === w.toUpperCase()) return w;     // short all-caps tokens
+      return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    }).join(' ');
 
-    // open/close the filter dropdowns
-    const closeDrops = () => $$('.fdrop', filtersEl).forEach((d) => {
-      d.classList.remove('is-open');
-      d.querySelector('.fdrop__btn').setAttribute('aria-expanded', 'false');
-      d.querySelector('.fdrop__panel').hidden = true;
-    });
-    $$('.fdrop__btn', filtersEl).forEach((btn) => btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const d = btn.closest('.fdrop'); const open = d.classList.contains('is-open');
-      closeDrops();
-      if (!open) { d.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); d.querySelector('.fdrop__panel').hidden = false; }
-    }));
-    $$('.fdrop__panel', filtersEl).forEach((pn) => pn.addEventListener('click', (e) => e.stopPropagation()));
-    document.addEventListener('click', closeDrops);
+    const num = (v) => parseFloat(String(v == null ? '' : v).replace(/[^0-9.\-]/g, ''));
+    const findCol = (header, names) => {
+      const norm = (x) => String(x).trim().toLowerCase();
+      for (let i = 0; i < header.length; i++) if (names.indexOf(norm(header[i])) !== -1) return i;
+      return -1;
+    };
 
-    let view = 'grid';
-    const checked = (name) => [...filtersEl.querySelectorAll(`input[name="${name}"]:checked`)].map((i) => i.value);
-
-    const card = (p) => {
-      const badge = p.badge === 'best' ? '<span class="pcard__badge pcard__badge--best">Best Seller</span>'
-        : p.badge === 'limited' ? '<span class="pcard__badge pcard__badge--limited">Limited Edition</span>' : '';
-      const yearChip = p.y !== 'No Age' ? `<span class="chip">${esc(p.y)}</span>` : '';
-      const media = `<div class="pcard__media">${badge}<img src="assets/img/${p.img}.webp" alt="${esc(p.n)}" loading="lazy"></div>`;
-      if (view === 'list') {
-        return `<article class="pcard pcard--list">${media}
-          <div class="pcard__body">
-            <p class="pcard__cat">${esc(p.c)} · ${esc(p.b)}</p>
-            <h3 class="pcard__name">${esc(p.n)}</h3>
-            <div class="pcard__meta"><span class="chip">${esc(p.s)}</span>${yearChip}<span class="pcard__stock">In Stock</span></div>
-          </div>
-          <p class="pcard__price">$${p.p.toFixed(2)}</p>
-        </article>`;
+    // Turn the sheet's array-of-rows into product objects.
+    function rowsToCatalog(aoa) {
+      let h = -1;
+      for (let i = 0; i < aoa.length; i++) {
+        const row = (aoa[i] || []).map((x) => String(x).trim().toLowerCase());
+        if (row.indexOf('sku') !== -1 && row.indexOf('description') !== -1) { h = i; break; }
       }
-      return `<article class="pcard">${media}
-        <div class="pcard__body">
-          <p class="pcard__cat">${esc(p.c)} · ${esc(p.b)}</p>
-          <h3 class="pcard__name">${esc(p.n)}</h3>
-          <p class="pcard__price">$${p.p.toFixed(2)}</p>
-          <div class="pcard__meta"><span class="chip">${esc(p.s)}</span>${yearChip}<span class="pcard__stock">In Stock</span></div>
-        </div>
-      </article>`;
-    };
+      if (h < 0) return [];
+      const H = aoa[h];
+      const ci = {
+        desc: findCol(H, ['description', 'name', 'item', 'product']),
+        size: findCol(H, ['size']),
+        price: findCol(H, ['unit price', 'price', 'selling price', 'retail']),
+        onhand: findCol(H, ['on hand', 'onhand', 'qty', 'quantity', 'stock']),
+        cat: findCol(H, ['category', 'dept', 'department', 'class']),
+      };
+      if (ci.desc < 0 || ci.price < 0) return [];
+      const out = [];
+      for (let i = h + 1; i < aoa.length; i++) {
+        const r = aoa[i] || [];
+        const desc = String(r[ci.desc] == null ? '' : r[ci.desc]).trim();
+        if (!desc) continue;                                   // section header / blank row
+        const price = num(r[ci.price]);
+        if (!(price > 0)) continue;                            // skip unpriced rows
+        const onhand = ci.onhand >= 0 ? num(r[ci.onhand]) : 1;
+        if (ci.onhand >= 0 && !(onhand > 0)) continue;         // skip out-of-stock
+        const rawCat = ci.cat >= 0 ? String(r[ci.cat] || '').trim().toUpperCase() : '';
+        let map = CAT_MAP[rawCat];
+        if (!map) map = CAT_MAP[rawCat.split(' ')[0]] || [titleCase(rawCat) || 'Other', titleCase(rawCat) || 'Other'];
+        out.push({
+          n: titleCase(desc), c: map[0], t: map[1], p: price,
+          s: ci.size >= 0 ? String(r[ci.size] || '').trim().toUpperCase() : '',
+          low: onhand > 0 && onhand <= 2,
+        });
+      }
+      return out;
+    }
 
-    const render = () => {
-      const fc = checked('category'), fb = checked('brand'), fs = checked('size'), fy = checked('year');
-      const priceEl = $('#shopPrice');
-      const maxPrice = priceEl ? +priceEl.value : maxP;
+    // Build a CSV endpoint from the SHEET config (full URL passed through, bare ID -> gviz CSV).
+    function sheetCsvUrl(s) {
+      if (!s) return null;
+      const bust = '_=' + Date.now();
+      if (/^https?:\/\//i.test(s)) return s + (s.indexOf('?') >= 0 ? '&' : '?') + bust;
+      return 'https://docs.google.com/spreadsheets/d/' + s + '/gviz/tq?tqx=out:csv&' + bust;
+    }
+
+    // Minimal RFC-4180 CSV parser (handles quotes, embedded commas/newlines) -> rows of strings.
+    function parseCSV(text) {
+      const rows = []; let row = [], val = '', q = false;
+      let i = text.charCodeAt(0) === 0xFEFF ? 1 : 0;
+      for (const n = text.length; i < n; i++) {
+        const ch = text[i];
+        if (q) {
+          if (ch === '"') { if (text[i + 1] === '"') { val += '"'; i++; } else q = false; }
+          else val += ch;
+        } else if (ch === '"') q = true;
+        else if (ch === ',') { row.push(val); val = ''; }
+        else if (ch === '\n') { row.push(val); rows.push(row); row = []; val = ''; }
+        else if (ch !== '\r') val += ch;
+      }
+      if (val !== '' || row.length) { row.push(val); rows.push(row); }
+      return rows;
+    }
+
+    async function loadCatalog() {
+      // 1) Google Sheet — the live source when configured.
+      const csvUrl = sheetCsvUrl(SHEET);
+      if (csvUrl && window.fetch) {
+        try {
+          const res = await fetch(csvUrl, { cache: 'no-store' });
+          if (res.ok) {
+            const cat = rowsToCatalog(parseCSV(await res.text()));
+            if (cat.length) return cat;
+          }
+        } catch (e) {
+          if (window.console) console.warn('[shop] Google Sheet load failed, falling back to local file:', e);
+        }
+      }
+      // 2) Local inventory.xlsx — fallback / used when no Sheet is configured.
+      if (window.XLSX && window.fetch) {
+        try {
+          const res = await fetch(INVENTORY_URL + '?_=' + Date.now(), { cache: 'no-store' });
+          if (res.ok) {
+            const wb = XLSX.read(await res.arrayBuffer(), { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false, defval: '' });
+            const cat = rowsToCatalog(aoa);
+            if (cat.length) return cat;
+          }
+        } catch (e) {
+          if (window.console) console.warn('[shop] inventory.xlsx could not be loaded:', e);
+        }
+      }
+      return null; // 3) build() will use the placeholder FALLBACK.
+    }
+
+    // ---- UI, built once we have a catalogue (live or fallback) ----
+    function build(CATALOG) {
+      const order = (arr, ref) => ref
+        ? ref.filter((v) => arr.indexOf(v) !== -1).concat(arr.filter((v) => ref.indexOf(v) === -1))
+        : arr.slice().sort((a, b) => a.localeCompare(b));
+      const uniq = (key) => [...new Set(CATALOG.map((p) => p[key]).filter((v) => v !== '' && v != null))];
+
+      const FILTERS = [
+        { name: 'category', title: 'Category', field: 'c', order: ['Whisky', 'Wine', 'Vodka', 'Rum', 'Gin', 'Tequila', 'Liqueur', 'Brandy & Cognac', 'Beer', 'Coolers & RTD', 'Spirits', 'Non-Alcoholic'] },
+        { name: 'type', title: 'Type', field: 't', order: null },
+        { name: 'size', title: 'Size', field: 's', order: ['200ML', '375ML', '500ML', '700ML', '710ML', '750ML', '1L', '1.14L', '1.5L', '1.75L', '2L', '3L', '4L', '4PK', '6PK', '8PK', '12PK', '15PK', 'EA'] },
+      ];
+      const maxP = Math.max(5, Math.ceil(Math.max(...CATALOG.map((p) => p.p)) / 5) * 5);
+      const minP = Math.floor(Math.min(...CATALOG.map((p) => p.p)));
+
+      const drop = (title, name, values, isPrice) => {
+        const body = isPrice
+          ? `<input type="range" class="fprice" id="shopPrice" min="${minP}" max="${maxP}" value="${maxP}" aria-label="Maximum price"><p class="fprice__label">Up to <strong id="shopPriceVal">$${maxP}</strong></p>`
+          : values.map((v) => `<label class="fopt"><input type="checkbox" name="${name}" value="${esc(v)}"><span>${esc(v)}</span></label>`).join('');
+        return `<div class="fdrop" data-name="${name}">
+          <button class="fdrop__btn" type="button" aria-expanded="false">${title}<span class="fdrop__count" data-count="${name}"></span>
+            <svg class="fdrop__chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+          <div class="fdrop__panel" hidden>${body}</div>
+        </div>`;
+      };
+      const searchHTML = `<div class="fsearch">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="search" id="shopSearch" placeholder="Search bottles…" aria-label="Search bottles" autocomplete="off">
+      </div>`;
+      filtersEl.innerHTML = searchHTML +
+        FILTERS.map((f) => drop(f.title, f.name, order(uniq(f.field), f.order))).join('') +
+        drop('Price', 'price', [], true);
+
+      // open/close the filter dropdowns
+      const closeDrops = () => $$('.fdrop', filtersEl).forEach((d) => {
+        d.classList.remove('is-open');
+        d.querySelector('.fdrop__btn').setAttribute('aria-expanded', 'false');
+        d.querySelector('.fdrop__panel').hidden = true;
+      });
+      $$('.fdrop__btn', filtersEl).forEach((btn) => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const d = btn.closest('.fdrop'); const open = d.classList.contains('is-open');
+        closeDrops();
+        if (!open) { d.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); d.querySelector('.fdrop__panel').hidden = false; }
+      }));
+      $$('.fdrop__panel', filtersEl).forEach((pn) => pn.addEventListener('click', (e) => e.stopPropagation()));
+      document.addEventListener('click', closeDrops);
+
+      let view = 'grid';
+      const checked = (name) => [...filtersEl.querySelectorAll(`input[name="${name}"]:checked`)].map((i) => i.value);
+
+      const card = (p) => {
+        const slug = CAT_SLUG[p.c] || 'spirits';
+        const lowCls = p.low ? ' pcard__stock-dot--low' : '';
+        const stockTxt = p.low ? 'Low Stock' : 'In Stock';
+        const size = p.s ? `<span class="pcard__size">${esc(p.s)}</span>` : '';
+        const listCls = view === 'list' ? ' pcard--list' : '';
+        return `<article class="pcard pcard--shelf pcard--shelf-${slug}${listCls}">
+          <div class="pcard__shelf-main">
+            <span class="pcard__cat">${esc(p.t || p.c)}</span>
+            <h3 class="pcard__name">${esc(p.n)}</h3>
+          </div>
+          <div class="pcard__shelf-foot">
+            <span class="pcard__price">$${p.p.toFixed(2)}</span>
+            <span class="pcard__shelf-meta">${size}<span class="pcard__stock-dot${lowCls}">${stockTxt}</span></span>
+          </div>
+        </article>`;
+      };
+
       const setA = (name, n, active) => {
         const btn = filtersEl.querySelector(`.fdrop[data-name="${name}"] .fdrop__btn`);
         if (!btn) return;
         btn.querySelector('.fdrop__count').textContent = n ? ` (${n})` : '';
         btn.classList.toggle('is-active', !!active);
       };
-      setA('category', fc.length, fc.length); setA('brand', fb.length, fb.length);
-      setA('size', fs.length, fs.length); setA('year', fy.length, fy.length);
-      setA('price', 0, maxPrice < maxP);
-      const clearBtn = $('#shopClear'); if (clearBtn) clearBtn.hidden = !(fc.length || fb.length || fs.length || fy.length || maxPrice < maxP);
-      let list = CATALOG.filter((p) =>
-        (!fc.length || fc.includes(p.c)) && (!fb.length || fb.includes(p.b)) &&
-        (!fs.length || fs.includes(p.s)) && (!fy.length || fy.includes(p.y)) && p.p <= maxPrice);
-      const sort = sortEl.value;
-      if (sort === 'price-asc') list = list.slice().sort((a, b) => a.p - b.p);
-      else if (sort === 'price-desc') list = list.slice().sort((a, b) => b.p - a.p);
-      else if (sort === 'name') list = list.slice().sort((a, b) => a.n.localeCompare(b.n));
-      countEl.textContent = `${list.length} product${list.length !== 1 ? 's' : ''}`;
-      grid.innerHTML = list.map(card).join('');
-      emptyEl.hidden = list.length > 0;
-      if (hasGSAP && !REDUCE) gsap.fromTo(grid.children, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.025, ease: EASE, overwrite: true });
-    };
 
-    filtersEl.addEventListener('change', render);
-    filtersEl.addEventListener('input', (e) => {
-      if (e.target.id === 'shopPrice') { $('#shopPriceVal').textContent = '$' + e.target.value; render(); }
-    });
-    sortEl.addEventListener('change', render);
-    $$('.shop__view button').forEach((btn) => btn.addEventListener('click', () => {
-      $$('.shop__view button').forEach((b) => { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
-      btn.classList.add('is-active'); btn.setAttribute('aria-pressed', 'true');
-      view = btn.dataset.view; grid.classList.toggle('shop__grid--list', view === 'list'); render();
-    }));
-    const clearAll = () => {
-      filtersEl.querySelectorAll('input[type=checkbox]').forEach((c) => { c.checked = false; });
-      const pr = $('#shopPrice'); if (pr) { pr.value = maxP; $('#shopPriceVal').textContent = '$' + maxP; }
+      const render = () => {
+        const sel = {};
+        FILTERS.forEach((f) => { sel[f.name] = checked(f.name); });
+        const priceEl = $('#shopPrice');
+        const maxPrice = priceEl ? +priceEl.value : maxP;
+        const q = (($('#shopSearch') || {}).value || '').trim().toLowerCase();
+
+        FILTERS.forEach((f) => setA(f.name, sel[f.name].length, sel[f.name].length));
+        setA('price', 0, maxPrice < maxP);
+        const anyActive = FILTERS.some((f) => sel[f.name].length) || maxPrice < maxP || !!q;
+        const clearBtn = $('#shopClear'); if (clearBtn) clearBtn.hidden = !anyActive;
+
+        let list = CATALOG.filter((p) => {
+          for (let j = 0; j < FILTERS.length; j++) {
+            const v = sel[FILTERS[j].name];
+            if (v.length && v.indexOf(p[FILTERS[j].field]) === -1) return false;
+          }
+          if (p.p > maxPrice) return false;
+          if (q && p.n.toLowerCase().indexOf(q) === -1 && String(p.t || '').toLowerCase().indexOf(q) === -1) return false;
+          return true;
+        });
+        const sort = sortEl.value;
+        if (sort === 'price-asc') list = list.slice().sort((a, b) => a.p - b.p);
+        else if (sort === 'price-desc') list = list.slice().sort((a, b) => b.p - a.p);
+        else if (sort === 'name') list = list.slice().sort((a, b) => a.n.localeCompare(b.n));
+        countEl.textContent = `${list.length} product${list.length !== 1 ? 's' : ''}`;
+        grid.innerHTML = list.map(card).join('');
+        emptyEl.hidden = list.length > 0;
+        // Only stagger the first row-band — with hundreds of bottles a full stagger would take seconds.
+        if (hasGSAP && !REDUCE) gsap.fromTo([...grid.children].slice(0, 24), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.03, ease: EASE, overwrite: true });
+      };
+
+      filtersEl.addEventListener('change', render);
+      filtersEl.addEventListener('input', (e) => {
+        if (e.target.id === 'shopPrice') { $('#shopPriceVal').textContent = '$' + e.target.value; render(); }
+        else if (e.target.id === 'shopSearch') render();
+      });
+      sortEl.addEventListener('change', render);
+      $$('.shop__view button').forEach((btn) => btn.addEventListener('click', () => {
+        $$('.shop__view button').forEach((b) => { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
+        btn.classList.add('is-active'); btn.setAttribute('aria-pressed', 'true');
+        view = btn.dataset.view; grid.classList.toggle('shop__grid--list', view === 'list'); render();
+      }));
+      const clearAll = () => {
+        filtersEl.querySelectorAll('input[type=checkbox]').forEach((c) => { c.checked = false; });
+        const pr = $('#shopPrice'); if (pr) { pr.value = maxP; $('#shopPriceVal').textContent = '$' + maxP; }
+        const sq = $('#shopSearch'); if (sq) sq.value = '';
+        render();
+      };
+      $('#shopClear') && $('#shopClear').addEventListener('click', clearAll);
+      $('#shopClear2') && $('#shopClear2').addEventListener('click', clearAll);
+
+      const openF = () => { filtersEl.classList.add('is-open'); if (overlay) overlay.hidden = false; };
+      const closeF = () => { filtersEl.classList.remove('is-open'); if (overlay) overlay.hidden = true; };
+      $('#shopFilterToggle') && $('#shopFilterToggle').addEventListener('click', openF);
+      $('#shopFilterClose') && $('#shopFilterClose').addEventListener('click', closeF);
+      overlay && overlay.addEventListener('click', closeF);
+
+      // Deep links, e.g. shop.html?category=Whisky (from the homepage category tiles).
+      // Reads any filter's name as a query param (comma-separated), matched case-insensitively.
+      try {
+        const params = new URLSearchParams(location.search);
+        FILTERS.forEach((f) => {
+          params.getAll(f.name).join(',').split(',').map((s) => s.trim()).filter(Boolean).forEach((val) => {
+            const box = [...filtersEl.querySelectorAll(`input[name="${f.name}"]`)].find((i) => i.value.toLowerCase() === val.toLowerCase());
+            if (box) box.checked = true;
+          });
+        });
+      } catch (e) { /* no-op */ }
+
       render();
-    };
-    $('#shopClear') && $('#shopClear').addEventListener('click', clearAll);
-    $('#shopClear2') && $('#shopClear2').addEventListener('click', clearAll);
+    }
 
-    const openF = () => { filtersEl.classList.add('is-open'); if (overlay) overlay.hidden = false; };
-    const closeF = () => { filtersEl.classList.remove('is-open'); if (overlay) overlay.hidden = true; };
-    $('#shopFilterToggle') && $('#shopFilterToggle').addEventListener('click', openF);
-    $('#shopFilterClose') && $('#shopFilterClose').addEventListener('click', closeF);
-    overlay && overlay.addEventListener('click', closeF);
-
-    render();
+    if (countEl) countEl.textContent = 'Loading the shelf…';
+    loadCatalog().then((cat) => build(cat || FALLBACK));
   }
 
   function setupCountdown() {
